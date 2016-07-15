@@ -1,0 +1,36 @@
+{
+  "name": "stack-overflow-feed-bot",
+  "version": "1.0.0",
+  "description": "Posts in Slack for each new Stack Overflow post on a given tag.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "stack",
+    "overflow",
+    "slack",
+    "bot",
+    "feed"
+  ],
+  "author": "Don McCurdy <dm@donmccurdy.com>",
+  "license": "MIT",
+  "homepage": "https://github.com/donmccurdy/stack-overflow-feed-bot#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/donmccurdy/stack-overflow-feed-bot.git"
+  },
+  "bugs": {
+    "url": "https://github.com/donmccurdy/stack-overflow-feed-bot/issues"
+  },
+  "dependencies": {
+    "dotenv": "^2.0.0",
+    "node-fetch": "^1.5.3",
+    "slackbots": "^0.5.1"
+  },
+  "devDependencies": {
+    "nodemon": "^1.9.2"
+  }
+}
