@@ -9,7 +9,6 @@ assert(process.env.SLACK_TOKEN, 'missing SLACK_TOKEN in env');
 assert(process.env.SLACK_NAME, 'missing SLACK_NAME in env');
 assert(process.env.SLACK_CHANNEL, 'missing SLACK_CHANNEL in env');
 assert(process.env.STACK_OVERFLOW_TAG, 'missing STACK_OVERFLOW_TAG in env');
-assert(process.env.DB_PATH, 'missing DB_PATH in env');
 assert(process.env.REFRESH_RATE_SECONDS >= 60, 'REFRESH_RATE_SECONDS must be >= 60');
 
 var API_URL = 'https://api.stackexchange.com'
@@ -27,8 +26,7 @@ if (process.env.RUN_ONCE) {
 } else {
   var bot = new Bot({token: process.env.SLACK_TOKEN, name: process.env.SLACK_NAME});
   bot.on('start', function() {
-    var interval = process.env.REFRESH_RATE_SECONDS * 1000;
-    setInterval(pollQuestions, interval);
+    setInterval(pollQuestions, process.env.REFRESH_RATE_SECONDS * 1000);
   });
 }
 
