@@ -31,7 +31,7 @@ class StackOverflowFeedBot {
     if (process.env.RUN_ONCE) {
       this.poll();
     } else {
-      this.bot.on('start', function() {
+      this.bot.on('start', () => {
         setInterval(this.poll.bind(this), process.env.REFRESH_RATE_SECONDS * 1000);
       });
     }
@@ -39,7 +39,7 @@ class StackOverflowFeedBot {
 
   poll () {
     var url = API_URL
-      .replace('{tag}',encodeURIComponent(process.env.STACK_OVERFLOW_TAG))
+      .replace('{tag}', encodeURIComponent(process.env.STACK_OVERFLOW_TAG))
       .replace('{fromdate}', this.fromdate);
     fetch(url)
       .then((res) => res.json())
