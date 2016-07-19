@@ -1,3 +1,5 @@
+'use strict';
+
 var Bot = require('slackbots'),
     assert = require('assert'),
     dotenv = require('dotenv'),
@@ -19,33 +21,44 @@ var API_URL = 'https://api.stackexchange.com'
   + '&tagged={tag}'
   + '&fromdate={fromdate}';
 
-var bot;
+class StackOverflowFeedBot {
+  constructor () {
+    this.fromdate = Math.floor((new Date('2016-07-16')) / 1000);
+    this.bot = new Bot({token: process.env.SLACK_TOKEN, name: process.env.SLACK_NAME});
+  }
 
-if (process.env.RUN_ONCE) {
-  pollQuestions();
-} else {
-  var bot = new Bot({token: process.env.SLACK_TOKEN, name: process.env.SLACK_NAME});
-  bot.on('start', function() {
-    setInterval(pollQuestions, process.env.REFRESH_RATE_SECONDS * 1000);
-  });
-}
+  start () {
+    if (process.env.RUN_ONCE) {
+      this.poll();
+    } else {
+      this.bot.on('start', function() {
+        setInterval(this.poll.bind(this), process.env.REFRESH_RATE_SECONDS * 1000);
+      });
+    }
+  }
 
-var fromdate = Math.floor((new Date()) / 1000);
+  poll () {
+    var url = API_URL
+      .replace('{tag}',encodeURIComponent(process.env.STACK_OVERFLOW_TAG))
+      .replace('{fromdate}', this.fromdate);
+    fetch(url)
+      .then((res) => res.json())
+      .then((json) => {
+        json.items = json.items.slice(0, 5);
+        console.log(json);
+        return json;
+      })
+      .then((json) => json.items.forEach(this.post.bind(this)));
+  }
 
-function pollQuestions () {
-  var url = API_URL
-    .replace('{tag}',encodeURIComponent(process.env.STACK_OVERFLOW_TAG))
-    .replace('{fromdate}', fromdate);
-  fetch(url)
-    .then((res) => res.json())
-    .then((json) => json.items.forEach(postNewQuestion));
-}
-
-function postNewQuestion (question) {
-  fromdate = Math.max(fromdate, question.creation_date);
-  if (bot) {
-    bot.postMessageToChannel(process.env.SLACK_CHANNEL, question.link);
-  } else {
-    console.log(question);
+  post (question) {
+    this.fromdate = Math.max(this.fromdate, question.creation_date);
+    if (this.bot) {
+      this.bot.postMessageToChannel(process.env.SLACK_CHANNEL, question.link);
+    } else {
+      console.log(question);
+    }
   }
 }
+
+(new StackOverflowFeedBot()).start();
