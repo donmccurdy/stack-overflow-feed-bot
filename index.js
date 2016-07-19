@@ -23,7 +23,7 @@ var API_URL = 'https://api.stackexchange.com'
 
 class StackOverflowFeedBot {
   constructor () {
-    this.fromdate = Math.floor((new Date('2016-07-16')) / 1000);
+    this.fromdate = Math.floor((new Date()) / 1000);
     this.bot = new Bot({token: process.env.SLACK_TOKEN, name: process.env.SLACK_NAME});
   }
 
@@ -43,11 +43,6 @@ class StackOverflowFeedBot {
       .replace('{fromdate}', this.fromdate);
     fetch(url)
       .then((res) => res.json())
-      .then((json) => {
-        json.items = json.items.slice(0, 5);
-        console.log(json);
-        return json;
-      })
       .then((json) => json.items.forEach(this.post.bind(this)));
   }
 
