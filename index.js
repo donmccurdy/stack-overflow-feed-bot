@@ -11,6 +11,7 @@ assert(process.env.SLACK_TOKEN, 'missing SLACK_TOKEN in env');
 assert(process.env.SLACK_NAME, 'missing SLACK_NAME in env');
 assert(process.env.SLACK_CHANNEL, 'missing SLACK_CHANNEL in env');
 assert(process.env.STACK_OVERFLOW_TAG, 'missing STACK_OVERFLOW_TAG in env');
+assert(process.env.STACK_OVERFLOW_API_KEY, 'missing STACK_OVERFLOW_API_KEY in env');
 assert(process.env.REFRESH_RATE_SECONDS >= 60, 'REFRESH_RATE_SECONDS must be >= 60');
 
 var API_URL = 'https://api.stackexchange.com'
@@ -18,6 +19,7 @@ var API_URL = 'https://api.stackexchange.com'
   + '?site=stackoverflow'
   + '&order=desc'
   + '&sort=creation'
+  + '&key={key}'
   + '&tagged={tag}'
   + '&fromdate={fromdate}';
 
@@ -39,6 +41,7 @@ class StackOverflowFeedBot {
 
   poll () {
     var url = API_URL
+      .replace('{key}', encodeURIComponent(process.env.STACK_OVERFLOW_API_KEY))
       .replace('{tag}', encodeURIComponent(process.env.STACK_OVERFLOW_TAG))
       .replace('{fromdate}', this.fromdate);
     fetch(url)
