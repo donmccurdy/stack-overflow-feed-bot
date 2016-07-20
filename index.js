@@ -52,7 +52,7 @@ class StackOverflowFeedBot {
   post (question) {
     this.fromdate = Math.max(this.fromdate, question.creation_date);
     if (this.bot) {
-      this.bot.postMessageToChannel(process.env.SLACK_CHANNEL, question.link);
+      this.bot.postMessageToChannel(process.env.SLACK_CHANNEL, question.link, {unfurl_links: true});
     } else {
       console.log(question);
     }
