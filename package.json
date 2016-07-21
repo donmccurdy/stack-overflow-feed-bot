@@ -1,7 +1,7 @@
 {
   "name": "stack-overflow-feed-bot",
   "version": "1.0.0",
-  "description": "Posts in Slack for each new Stack Overflow post on a given tag.",
+  "description": "Posts links in Slack for each new Stack Overflow question with a given tag.",
   "main": "index.js",
   "scripts": {
     "start": "node index.js",
